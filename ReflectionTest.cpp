@@ -4,6 +4,7 @@
 #include "WorldAPI.h"
 
 #include <iostream>
+#include <json/json.h>
 
 using namespace rttr;
 using namespace std;
@@ -12,12 +13,7 @@ RTTR_REGISTRATION
 {
     registration::method("pow", select_overload<double(double, double)>(&pow));
 
-    //registration::method("createObject", &(WorldAPI::createObject));
-    //registration::method("createPlayer", &(WorldAPI::createPlayer));
-    //registration::method("createWaypoint", &(WaypointAspectAPI::createWaypoint));
-
-
-    
+      
     registration::class_<WorldAPI>("WorldAPI")
         .method("createObject", &WorldAPI::createObject)
         .method("createPlayer", &WorldAPI::createPlayer);
@@ -57,6 +53,28 @@ int main()
 
     method meth2 = waypointAspectAPIReference.get_method("createWaypoint");
     meth2.invoke(waypointAspectAPI, { 6 });
+
+
+    struct {
+        enum { is_int, is_float, is_char } type;
+        union {
+            int ival;
+            float fval;
+            char cval;
+        } val;
+    } my_array;
+
+
+
+
+    string json = "{\"API\": \"WaypointAspectAPI\", "
+        "\"method\" : \"createPlayer\", "
+        "\"parameters\" : [5] , "
+        "\"parameterTypes\" : [\"int\"]}";
+
+    char test[] = {5, 4.3};
+    meth2.invoke(waypointAspectAPI,  test );
+    
 
     /*
     WaypointAspectAPI waypointAspectAPI();
